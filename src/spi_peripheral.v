@@ -58,13 +58,13 @@ wire nCS_rising_edge = nCS_sync2 & ~nCS_prev;
 wire nCS_falling_edge = ~nCS_sync2 & nCS_prev;
 reg [4:0] bit_count;
 reg [15:0] shift_register;
-reg transaction_ready;
 
 always @(posedge clk or negedge nrst) begin
     if (!nrst) begin
         bit_count <=5'b0;
         shift_register <=16'b0;
-        transaction_ready <= 1'b0;
+    end else if (nCS_falling_edge) begin
+        bit_count <= 5'b0;
     end else if (sclk_rising_edge && !nCS_sync2) begin
         bit_count <= bit_count + 1;
         shift_register <= {shift_register[14:0], COPI_sync2};
